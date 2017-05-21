@@ -1,5 +1,6 @@
-﻿using Xunit;
-using FluentAssertions;
+﻿using FluentAssertions;
+using ValiDoc.Tests.TestData;
+using Xunit;
 
 namespace ValiDoc.Tests
 {
@@ -10,13 +11,9 @@ namespace ValiDoc.Tests
 		{
             var valiDoc = new Core.ValiDoc();
 
-            //var validationRules = valiDoc.Rules(new PersonValidator());
+            var validationRules = valiDoc.GetRules(new PersonValidator());
 
-            //validationRules.Should().NotBeEmpty();
-
-            var x = new PersonValidator().CreateDescriptor();
-
-            var y = x.GetMembersWithValidators();
+            validationRules.Should().NotBeEmpty();
 		}
 	}
 }

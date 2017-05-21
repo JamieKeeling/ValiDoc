@@ -1,7 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6.1</TargetFramework>
+    <Version>0.1.0-alpha</Version>
+    <Description>An unobtrusive extension to FluentValidations for documenting validation rules.</Description>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Authors>Jamie Keeling</Authors>
+    <Company />
+    <PackageLicenseUrl>https://github.com/JamieKeeling/ValiDoc/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/JamieKeeling/ValiDoc</PackageProjectUrl>
+    <Copyright>Copyright (c) Jamie Keeling</Copyright>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="7.0.0" />
+  </ItemGroup>
 </Project>

@@ -4,11 +4,11 @@ using FluentValidation.Validators;
 using System;
 using System.Collections.Generic;
 
-namespace ValiDoc.Core
+namespace ValiDoc
 {
-    public class ValiDoc
+    public static class ValiDoc
     {
-        public IEnumerable<string> GetRules<T>(AbstractValidator<T> validator)
+        public static IEnumerable<string> GetRules<T>(this AbstractValidator<T> validator)
         {
             if(validator == null)
             {
@@ -22,19 +22,25 @@ namespace ValiDoc.Core
                 throw new ArgumentNullException(nameof(descriptor));
             }
 
-            var validators = descriptor.GetMembersWithValidators();
+            var memberValidators = descriptor.GetMembersWithValidators();
 
-            foreach(var propertyValidator in validators)
+            foreach(var member in memberValidators)
             {
-                var rules = descriptor.GetRulesForMember(propertyValidator.Key);
+                var rules = descriptor.GetRulesForMember(member.Key);
                 
                 foreach(PropertyRule rule in rules)
                 {
                     var propertyName = rule.GetDisplayName();
 
                     //TODO: Identify supplied parameters for bounds based on the validator (example Maximum of 20, etc..)
-                    foreach(PropertyValidator validationRules in rule.Validators)
+                    foreach(var validationRules in rule.Validators)
                     {
+                        if (validationRules is ChildValidatorAdaptor childValidator)
+                        {
+                            yield return $"Field: {propertyName} | Validation: {childValidator.ValidatorType.FullName} | Severity: {childValidator.Severity}";
+                            yield break;
+                        }
+
                         yield return $"Field: {propertyName} | Validation: {validationRules.ErrorMessageSource.ResourceName} | Severity: {validationRules.Severity}";
                     }
                 }

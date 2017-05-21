@@ -57,6 +57,13 @@ namespace ValiDoc.Tests.Scenarios
                 {
                     FailureSeverity = "Error",
                     MemberName = "First Name",
+                    OnFailure = "Continue",
+                    ValidatorName = "NotEmptyValidator"
+                },
+                new RuleDescription
+                {
+                    FailureSeverity = "Error",
+                    MemberName = "Last Name",
                     OnFailure = "StopOnFirstFailure",
                     ValidatorName = "NotEmptyValidator"
                 },
@@ -64,14 +71,7 @@ namespace ValiDoc.Tests.Scenarios
                 {
                     FailureSeverity = "Error",
                     MemberName = "Last Name",
-                    OnFailure = "Continue",
-                    ValidatorName = "NotEmptyValidator"
-                },
-                new RuleDescription
-                {
-                    FailureSeverity = "Error",
-                    MemberName = "Last Name",
-                    OnFailure = "Continue",
+                    OnFailure = "StopOnFirstFailure",
                     ValidatorName = "MaximumLengthValidator"
                 }
             };

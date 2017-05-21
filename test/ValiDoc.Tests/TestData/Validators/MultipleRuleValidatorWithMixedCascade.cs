@@ -7,10 +7,10 @@ namespace ValiDoc.Tests.TestData.Validators
 	{
 		public MultipleRuleValidatorWithMixedCascade()
 		{
-            CascadeMode = CascadeMode.StopOnFirstFailure;
+            CascadeMode = CascadeMode.Continue;
 
 			RuleFor(p => p.FirstName).NotEmpty();
-			RuleFor(p => p.LastName).Cascade(CascadeMode.Continue).NotEmpty().MaximumLength(20);
+			RuleFor(p => p.LastName).Cascade(CascadeMode.StopOnFirstFailure).NotEmpty().MaximumLength(20);
 		}
 	}
 }

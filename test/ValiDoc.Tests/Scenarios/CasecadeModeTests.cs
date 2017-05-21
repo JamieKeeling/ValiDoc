@@ -43,5 +43,40 @@ namespace ValiDoc.Tests.Scenarios
 
             validationRules.ShouldBeEquivalentTo(expectedOutput);
         }
+
+        [Fact]
+        public void ValiDoc_WithGlobalCascadeValidatorAndRuleOverride_OutputsMultipleRulesWithPOverriddenCascade()
+        {
+            var validator = new MultipleRuleValidatorWithMixedCascade();
+
+            var validationRules = validator.GetRules().ToList();
+
+            var expectedOutput = new List<RuleDescription>
+            {
+                new RuleDescription
+                {
+                    FailureSeverity = "Error",
+                    MemberName = "First Name",
+                    OnFailure = "StopOnFirstFailure",
+                    ValidatorName = "NotEmptyValidator"
+                },
+                new RuleDescription
+                {
+                    FailureSeverity = "Error",
+                    MemberName = "Last Name",
+                    OnFailure = "Continue",
+                    ValidatorName = "NotEmptyValidator"
+                },
+                new RuleDescription
+                {
+                    FailureSeverity = "Error",
+                    MemberName = "Last Name",
+                    OnFailure = "Continue",
+                    ValidatorName = "MaximumLengthValidator"
+                }
+            };
+
+            validationRules.ShouldBeEquivalentTo(expectedOutput);
+        }
     }
 }

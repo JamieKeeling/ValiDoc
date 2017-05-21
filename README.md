@@ -74,4 +74,6 @@ public static IEnumerable<RuleDescription> GetValidationRules <T>(AbstractValida
 3. .WithMessage()
 4. .WithName()
 5. Validation arguments (Greater than 10 characters for example)
-5. Customer validators
+6. Customer validators
+7. .Must()
+8. .Casecade()

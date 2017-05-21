@@ -1,5 +1,7 @@
-﻿using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
+using System.Collections.Generic;
+using System.Linq;
+using ValiDoc.Output;
 using ValiDoc.Tests.TestData.Validators;
 using Xunit;
 
@@ -8,7 +10,7 @@ namespace ValiDoc.Tests.Scenarios
     public class MultipleRuleTests
     {
         [Fact]
-        public void ValiDoc_WithMultipleRuleValidator_OutputsMultipleRules()
+        public void ValiDoc_WithMultipleRuleValidator_OutputMultipleRules()
         {
             var validator = new MultipleRuleValidator();
 
@@ -16,9 +18,32 @@ namespace ValiDoc.Tests.Scenarios
 
             validationRules.Should().HaveCount(3);
 
-            validationRules.Should().NotContain(rule => string.IsNullOrEmpty(rule.MemberName)
-                                                        && string.IsNullOrEmpty(rule.ValidatorName)
-                                                        && string.IsNullOrEmpty(rule.FailureSeverity));
+            var expectedOutput = new List<RuleDescription>
+            {
+                new RuleDescription
+                {
+                    FailureSeverity = "Error",
+                    MemberName = "First Name",
+                    OnFailure = "Continue",
+                    ValidatorName = "NotNullValidator"
+                },
+                new RuleDescription
+                {
+                    FailureSeverity = "Error",
+                    MemberName = "Last Name",
+                    OnFailure = "Continue",
+                    ValidatorName = "NotEmptyValidator"
+                },
+                new RuleDescription
+                {
+                    FailureSeverity = "Error",
+                    MemberName = "Last Name",
+                    OnFailure = "Continue",
+                    ValidatorName = "MaximumLengthValidator"
+                }
+            };
+
+            validationRules.ShouldBeEquivalentTo(expectedOutput);
         }
     }
 }

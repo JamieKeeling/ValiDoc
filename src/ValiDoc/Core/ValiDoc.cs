@@ -39,13 +39,13 @@ namespace ValiDoc
                     //TODO: Identify supplied parameters for bounds based on the validator (example Maximum of 20, etc..)
                     foreach(var validationRules in rule.Validators)
                     {
-                        yield return BuildRuleDescription(validationRules, propertyName);
+                        yield return BuildRuleDescription(validationRules, propertyName, rule.CascadeMode);
                     }
                 }
             }
         }
 
-        private static RuleDescription BuildRuleDescription(IPropertyValidator validationRules, string propertyName)
+        private static RuleDescription BuildRuleDescription(IPropertyValidator validationRules, string propertyName, CascadeMode cascadeMode)
         {
             string validatorName;
             Severity? validationFailureSeverity;
@@ -66,7 +66,8 @@ namespace ValiDoc
             {
                 MemberName = propertyName,
                 ValidatorName = validatorName,
-                FailureSeverity = validationFailureSeverity.ToString()
+                FailureSeverity = validationFailureSeverity.ToString(),
+                OnFailure = cascadeMode.ToString()
             };
         }
     }

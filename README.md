@@ -62,9 +62,10 @@ public static IEnumerable<RuleDescription> GetValidationRules <T>(AbstractValida
 ## 
 #### Supported Scenarios
 
-1. Built in validators
-2. Chained validators for the same property
-3. Complex properties
+1. [Built in validators](https://github.com/JeremySkinner/FluentValidation/wiki/c.-Built-In-Validators)
+2. [Chained validators for the same property](https://github.com/JeremySkinner/FluentValidation/wiki/b.-Creating-a-Validator#chaining-validators-for-the-same-property)
+3. [Complex properties](https://github.com/JeremySkinner/FluentValidation/wiki/b.-Creating-a-Validator#complex-properties)
+4. [Cascade behaviour](https://github.com/JeremySkinner/FluentValidation/wiki/d.-Configuring-a-Validator#setting-the-cascade-mode)
 
 
 #### Future Roadmap
@@ -76,4 +77,3 @@ public static IEnumerable<RuleDescription> GetValidationRules <T>(AbstractValida
 5. Validation arguments (Greater than 10 characters for example)
 6. Customer validators
 7. .Must()
-8. .Casecade()

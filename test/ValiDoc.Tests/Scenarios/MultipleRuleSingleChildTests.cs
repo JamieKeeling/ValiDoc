@@ -1,5 +1,7 @@
-﻿using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
+using System.Collections.Generic;
+using System.Linq;
+using ValiDoc.Output;
 using ValiDoc.Tests.TestData.Validators;
 using Xunit;
 
@@ -8,7 +10,7 @@ namespace ValiDoc.Tests.Scenarios
     public class MultipleRuleSingleChildTests
     {
         [Fact]
-        public void ValiDoc_WithMultipleRuleSingleChildValidator_OutputsMultipleRulesAndSingleChild()
+        public void ValiDoc_WithMultipleRuleSingleChildValidator_OutputMultipleRulesAndSingleChild()
         {
             var validator = new MultipleRuleSingleChildValidator();
 
@@ -16,9 +18,39 @@ namespace ValiDoc.Tests.Scenarios
 
             validationRules.Should().HaveCount(4);
 
-            validationRules.Should().NotContain(rule => string.IsNullOrEmpty(rule.MemberName)
-                                                        && string.IsNullOrEmpty(rule.ValidatorName)
-                                                        && string.IsNullOrEmpty(rule.FailureSeverity));
+            var expectedOutput = new List<RuleDescription>
+            {
+                new RuleDescription
+                {
+                    FailureSeverity = "Error",
+                    MemberName = "First Name",
+                    OnFailure = "Continue",
+                    ValidatorName = "NotEmptyValidator"
+                },
+                new RuleDescription
+                {
+                    FailureSeverity = "Error",
+                    MemberName = "Last Name",
+                    OnFailure = "Continue",
+                    ValidatorName = "NotEmptyValidator"
+                },
+                new RuleDescription
+                {
+                    FailureSeverity = "Error",
+                    MemberName = "Last Name",
+                    OnFailure = "Continue",
+                    ValidatorName = "MaximumLengthValidator"
+                },
+                new RuleDescription
+                {
+                    FailureSeverity = "Error",
+                    MemberName = "Address",
+                    OnFailure = "Continue",
+                    ValidatorName = "AddressValidator"
+                }
+            };
+
+            validationRules.ShouldBeEquivalentTo(expectedOutput);
         }
     }
 }

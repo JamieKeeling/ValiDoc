@@ -10,7 +10,7 @@ namespace ValiDoc.Tests.Scenarios
     public class CasecadeModeTests
     {
         [Fact]
-        public void ValiDoc_WithMultipleRuleWithGlobalCascadeValidator_OutputsMultipleRulesWithIdenticalCascade()
+        public void ValiDoc_WithMultipleRuleWithGlobalCascadeValidator_OutputMultipleRulesWithIdenticalCascade()
         {
             var validator = new MultipleRuleValidatorWithGlobalCascade();
 
@@ -45,7 +45,7 @@ namespace ValiDoc.Tests.Scenarios
         }
 
         [Fact]
-        public void ValiDoc_WithGlobalCascadeValidatorAndRuleOverride_OutputsMultipleRulesWithPOverriddenCascade()
+        public void ValiDoc_WithGlobalCascadeValidatorAndRuleOverride_OutputMultipleRulesWithPOverriddenCascade()
         {
             var validator = new MultipleRuleValidatorWithMixedCascade();
 

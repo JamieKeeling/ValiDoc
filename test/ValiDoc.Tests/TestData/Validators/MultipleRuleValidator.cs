@@ -7,7 +7,7 @@ namespace ValiDoc.Tests.TestData.Validators
 	{
 		public MultipleRuleValidator()
 		{
-			RuleFor(p => p.FirstName).NotEmpty();
+			RuleFor(p => p.FirstName).NotNull();
 			RuleFor(p => p.LastName).NotEmpty().MaximumLength(20);
 		}
 	}

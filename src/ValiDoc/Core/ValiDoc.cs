@@ -7,6 +7,8 @@ using ValiDoc.Output;
 
 namespace ValiDoc
 {
+    //TODO: This class is huge - should investigate splitting out dependencies
+    // and relying on a DI container based on the consumer using the library.
     public static class ValiDoc
     {
         public static IEnumerable<RuleDescription> GetRules<T>(this AbstractValidator<T> validator)

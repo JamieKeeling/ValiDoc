@@ -8,7 +8,9 @@ An unobtrusive extension to FluentValidations for documenting validation rules.
 
 1. Install ValiDoc via NuGet
 
-Install-Package ValiDoc
+```<language>
+Install-Package ValiDoc -Pre
+```
 
 2. Reference ValiDoc namespace in the same class as your validator usage
 

@@ -3,12 +3,13 @@ using FluentValidation.Internal;
 using FluentValidation.Validators;
 using System;
 using System.Collections.Generic;
+using ValiDoc.Output;
 
 namespace ValiDoc
 {
     public static class ValiDoc
     {
-        public static IEnumerable<string> GetRules<T>(this AbstractValidator<T> validator)
+        public static IEnumerable<RuleDescription> GetRules<T>(this AbstractValidator<T> validator)
         {
             if(validator == null)
             {
@@ -28,23 +29,43 @@ namespace ValiDoc
             {
                 var rules = descriptor.GetRulesForMember(member.Key);
                 
-                foreach(PropertyRule rule in rules)
+                foreach(var validationRule in rules)
                 {
+                    var rule = (PropertyRule) validationRule;
                     var propertyName = rule.GetDisplayName();
 
                     //TODO: Identify supplied parameters for bounds based on the validator (example Maximum of 20, etc..)
                     foreach(var validationRules in rule.Validators)
                     {
-                        if (validationRules is ChildValidatorAdaptor childValidator)
-                        {
-                            yield return $"Field: {propertyName} | Validation: {childValidator.ValidatorType.FullName} | Severity: {childValidator.Severity}";
-                            yield break;
-                        }
-
-                        yield return $"Field: {propertyName} | Validation: {validationRules.ErrorMessageSource.ResourceName} | Severity: {validationRules.Severity}";
+                        yield return BuildRuleDescription(validationRules, propertyName);
                     }
                 }
             }
+        }
+
+        private static RuleDescription BuildRuleDescription(IPropertyValidator validationRules, string propertyName)
+        {
+            string validatorName;
+            Severity? validationFailureSeverity;
+
+            if (validationRules is ChildValidatorAdaptor childValidator)
+            {
+                validatorName = childValidator.ValidatorType.Name;
+                validationFailureSeverity = childValidator.Severity;
+            }
+            else
+            {
+                //Rules are not from a subsequent validator
+                validatorName = validationRules.ErrorMessageSource.ResourceName;
+                validationFailureSeverity = validationRules.Severity;
+            }
+
+            return new RuleDescription
+            {
+                MemberName = propertyName,
+                ValidatorName = validatorName,
+                FailureSeverity = validationFailureSeverity.ToString()
+            };
         }
     }
 }

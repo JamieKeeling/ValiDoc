@@ -52,12 +52,12 @@ public static IEnumerable<RuleDescription> GetValidationRules <T>(AbstractValida
 
 ##### Output
 
-| MemberName        | ValidatorName           | FailureSeverity  |
-| :-------------: |:-------------:| :-----:|
-| First Name      | NotEmptyValidator | Error |
-| Last Name      | NotEmptyValidator      |   Error |
-| Last Name | MaximumLengthValidator      |    Error |
-| Address | AddressValidator | Error |
+| MemberName        | ValidatorName           | FailureSeverity  | OnFailure |
+| :-------------: |:-------------:| :-----:|:---------:|
+| First Name      | NotEmptyValidator | Error | Continue |
+| Last Name      | NotEmptyValidator      |   Error | Continue |
+| Last Name | MaximumLengthValidator      |    Error | Continue |
+| Address | AddressValidator | Error | Continue |
 
 ## 
 #### Supported Scenarios

@@ -75,7 +75,7 @@ namespace ValiDoc
                 var parameterArray = new object[] { childValidator.GetValidator(new PropertyValidatorContext(new ValidationContext(rule.Member.DeclaringType), rule, propertyName)), true };
 
                 //Invoke extension method with validator instance
-                generatedGetRules.Invoke(null, parameterArray);
+                var output = generatedGetRules.Invoke(null, parameterArray) as IEnumerable<RuleDescription>;
             }
             else
             {

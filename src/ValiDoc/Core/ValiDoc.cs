@@ -58,6 +58,10 @@ namespace ValiDoc
 
                 if(null == null)
                 {
+                    Type type = typeof(IValidator<>);
+                    //Type[] typeArgs = { rule.Member.DeclaringType };
+                    Type constructed = type.MakeGenericType(rule.Member.DeclaringType);
+
                     var methodInfo = typeof(ValiDoc).GetRuntimeMethods();//.("GetRules", new Type[] { typeof(IValidator<>), typeof(bool) });
                     //var genericMethod = methodInfo.MakeGenericMethod(rule.TypeToValidate);
 
@@ -69,9 +73,9 @@ namespace ValiDoc
                     }
 
 
-                    myMethod = myMethod.MakeGenericMethod(typeof(IValidator<>));
+                    myMethod = myMethod.MakeGenericMethod(constructed);
 
-                    myMethod.Invoke(childValidator.GetValidator(new PropertyValidatorContext(new ValidationContext(rule.Member.DeclaringType), rule, propertyName)), null);
+                    myMethod.Invoke(null, new object[] { childValidator.GetValidator(new PropertyValidatorContext(new ValidationContext(rule.Member.DeclaringType), rule, propertyName)), true });
 
 
                     var childValidatorInstance = childValidator.GetValidator(new PropertyValidatorContext(new ValidationContext(rule.Member.DeclaringType), rule, propertyName));

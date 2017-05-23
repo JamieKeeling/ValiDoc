@@ -55,13 +55,7 @@ namespace ValiDoc
             {
                 validatorName = childValidator.ValidatorType.Name;
                 validationFailureSeverity = childValidator.Severity;
-
-                //Parameter 1
-                Type type = typeof(AbstractValidator<>);
-
-                // Instance of Address
-                Type constructed = type.MakeGenericType(childValidator.ValidatorType.GetTypeInfo().BaseType.GenericTypeArguments[0]);
-
+                
                 // Find the extension method based on the signature I have defined for the usage
                 // public static IEnumerable<RuleDescription> GetRules<T>(this AbstractValidator<T> validator, bool documentNested = false)
                 var runtimeMethods = typeof(ValiDoc).GetRuntimeMethods();
@@ -75,7 +69,7 @@ namespace ValiDoc
                 }
 
                 // Create the generic method instance of GetRules()
-                generatedGetRules = generatedGetRules.MakeGenericMethod(constructed);
+                generatedGetRules = generatedGetRules.MakeGenericMethod(childValidator.ValidatorType.GetTypeInfo().BaseType.GenericTypeArguments[0]);
 
                 //Parameter 1 = Derived from AbstractValidator<T>, Parameter 2 = boolean
                 var parameterArray = new object[] { childValidator.GetValidator(new PropertyValidatorContext(new ValidationContext(rule.Member.DeclaringType), rule, propertyName)), true };

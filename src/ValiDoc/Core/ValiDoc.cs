@@ -12,7 +12,7 @@ namespace ValiDoc
     // and relying on a DI container based on the consumer using the library.
     public static class ValiDoc
     {
-        public static IEnumerable<RuleDescription> GetRules<T>(this IValidator<T> validator, bool documentNested = false)
+        public static IEnumerable<RuleDescription> GetRules<T>(this AbstractValidator<T> validator, bool documentNested = false)
         {
             if(validator == null)
             {
@@ -56,44 +56,38 @@ namespace ValiDoc
                 validatorName = childValidator.ValidatorType.Name;
                 validationFailureSeverity = childValidator.Severity;
 
-                if(null == null)
+                //Parameter 1
+                Type type = typeof(AbstractValidator<>);
+
+                // Instance of Address
+                Type constructed = type.MakeGenericType(childValidator.ValidatorType.GetTypeInfo().BaseType.GenericTypeArguments[0]);
+
+                // Find the extension method based on the signature I have defined for the usage
+                // public static IEnumerable<RuleDescription> GetRules<T>(this AbstractValidator<T> validator, bool documentNested = false)
+                var runtimeMethods = typeof(ValiDoc).GetRuntimeMethods();
+
+                MethodInfo generatedGetRules = null;
+
+                // Nothing fancy for now, just pick the first option as we know it is GetRules
+                using (IEnumerator<MethodInfo> enumer = runtimeMethods.GetEnumerator())
                 {
-                    Type type = typeof(IValidator<>);
-                    //Type[] typeArgs = { rule.Member.DeclaringType };
-                    Type constructed = type.MakeGenericType(rule.Member.DeclaringType);
-
-                    var methodInfo = typeof(ValiDoc).GetRuntimeMethods();//.("GetRules", new Type[] { typeof(IValidator<>), typeof(bool) });
-                    //var genericMethod = methodInfo.MakeGenericMethod(rule.TypeToValidate);
-
-                    MethodInfo myMethod = null;
-
-                    using (IEnumerator<MethodInfo> enumer = methodInfo.GetEnumerator())
-                    {
-                        if (enumer.MoveNext()) myMethod = enumer.Current;
-                    }
-
-
-                    myMethod = myMethod.MakeGenericMethod(constructed);
-
-                    myMethod.Invoke(null, new object[] { childValidator.GetValidator(new PropertyValidatorContext(new ValidationContext(rule.Member.DeclaringType), rule, propertyName)), true });
-
-
-                    var childValidatorInstance = childValidator.GetValidator(new PropertyValidatorContext(new ValidationContext(rule.Member.DeclaringType), rule, propertyName));
-                    if(childValidatorInstance != null)
-                    {
-                        //genericMethod.Invoke(childValidatorInstance, new object[] { true });
-
-                        //return childValidatorInstance.GetRules<typeGeneric>(true);
-                    }
+                    if (enumer.MoveNext()) generatedGetRules = enumer.Current;
                 }
+
+                // Create the generic method instance of GetRules()
+                generatedGetRules = generatedGetRules.MakeGenericMethod(constructed);
+
+                //Parameter 1 = Derived from AbstractValidator<T>, Parameter 2 = boolean
+                var parameterArray = new object[] { childValidator.GetValidator(new PropertyValidatorContext(new ValidationContext(rule.Member.DeclaringType), rule, propertyName)), true };
+
+                //Invoke extension method with validator instance
+                generatedGetRules.Invoke(null, parameterArray);
             }
             else
             {
-                //Rules are not from a subsequent validator
-                validatorName = validationRules.ErrorMessageSource.ResourceName;
+                validatorName = validationRules.GetType().Name;
                 validationFailureSeverity = validationRules.Severity;
             }
-
 
             return new RuleDescription
             {

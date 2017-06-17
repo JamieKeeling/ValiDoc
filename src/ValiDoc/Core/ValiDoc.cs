@@ -1,9 +1,9 @@
-﻿using FluentValidation;
-using FluentValidation.Internal;
-using FluentValidation.Validators;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using FluentValidation;
+using FluentValidation.Internal;
+using FluentValidation.Validators;
 using ValiDoc.Output;
 
 namespace ValiDoc
@@ -40,13 +40,18 @@ namespace ValiDoc
                     //TODO: Identify supplied parameters for bounds based on the validator (example Maximum of 20, etc..)
                     foreach(var validationRules in rule.Validators)
                     {
-                        yield return BuildRuleDescription<T>(validationRules, propertyName, rule.CascadeMode, documentNested, rule);
+                        var documentedRules = BuildRuleDescription(validationRules, propertyName, rule.CascadeMode, documentNested, rule);
+
+                        foreach(var documentedRule in documentedRules)
+                        {
+                            yield return documentedRule;
+                        }
                     }
                 }
             }
         }
 
-        private static RuleDescription BuildRuleDescription<T>(IPropertyValidator validationRules, string propertyName, CascadeMode cascadeMode, bool documentNested, PropertyRule rule)
+        static IEnumerable<RuleDescription> BuildRuleDescription(IPropertyValidator validationRules, string propertyName, CascadeMode cascadeMode, bool documentNested, PropertyRule rule)
         {
             string validatorName;
             Severity? validationFailureSeverity;
@@ -55,27 +60,35 @@ namespace ValiDoc
             {
                 validatorName = childValidator.ValidatorType.Name;
                 validationFailureSeverity = childValidator.Severity;
-                
-                // Find the extension method based on the signature I have defined for the usage
-                // public static IEnumerable<RuleDescription> GetRules<T>(this AbstractValidator<T> validator, bool documentNested = false)
-                var runtimeMethods = typeof(ValiDoc).GetRuntimeMethods();
 
-                MethodInfo generatedGetRules = null;
-
-                // Nothing fancy for now, just pick the first option as we know it is GetRules
-                using (IEnumerator<MethodInfo> enumer = runtimeMethods.GetEnumerator())
+                if (documentNested)
                 {
-                    if (enumer.MoveNext()) generatedGetRules = enumer.Current;
+                    // Find the extension method based on the signature I have defined for the usage
+                    // public static IEnumerable<RuleDescription> GetRules<T>(this AbstractValidator<T> validator, bool documentNested = false)
+                    var runtimeMethods = typeof(ValiDoc).GetRuntimeMethods();
+
+                    MethodInfo generatedGetRules = null;
+
+                    // Nothing fancy for now, just pick the first option as we know it is GetRules
+                    using (IEnumerator<MethodInfo> enumer = runtimeMethods.GetEnumerator())
+                    {
+                        if (enumer.MoveNext()) generatedGetRules = enumer.Current;
+                    }
+
+                    // Create the generic method instance of GetRules()
+                    generatedGetRules = generatedGetRules.MakeGenericMethod(childValidator.ValidatorType.GetTypeInfo().BaseType.GenericTypeArguments[0]);
+
+                    //Parameter 1 = Derived from AbstractValidator<T>, Parameter 2 = boolean
+                    var parameterArray = new object[] { childValidator.GetValidator(new PropertyValidatorContext(new ValidationContext(rule.Member.DeclaringType), rule, propertyName)), true };
+
+                    //Invoke extension method with validator instance
+                    var output = generatedGetRules.Invoke(null, parameterArray) as IEnumerable<RuleDescription>;
+
+                    foreach (var deepDocumentRule in output)
+                    {
+                        yield return deepDocumentRule;
+                    }
                 }
-
-                // Create the generic method instance of GetRules()
-                generatedGetRules = generatedGetRules.MakeGenericMethod(childValidator.ValidatorType.GetTypeInfo().BaseType.GenericTypeArguments[0]);
-
-                //Parameter 1 = Derived from AbstractValidator<T>, Parameter 2 = boolean
-                var parameterArray = new object[] { childValidator.GetValidator(new PropertyValidatorContext(new ValidationContext(rule.Member.DeclaringType), rule, propertyName)), true };
-
-                //Invoke extension method with validator instance
-                var output = generatedGetRules.Invoke(null, parameterArray) as IEnumerable<RuleDescription>;
             }
             else
             {
@@ -83,7 +96,7 @@ namespace ValiDoc
                 validationFailureSeverity = validationRules.Severity;
             }
 
-            return new RuleDescription
+            yield return new RuleDescription
             {
                 MemberName = propertyName,
                 ValidatorName = validatorName,

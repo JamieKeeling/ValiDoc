@@ -66,6 +66,7 @@ public static IEnumerable<RuleDescription> GetValidationRules <T>(AbstractValida
 2. [Chained validators for the same property](https://github.com/JeremySkinner/FluentValidation/wiki/b.-Creating-a-Validator#chaining-validators-for-the-same-property)
 3. [Complex properties](https://github.com/JeremySkinner/FluentValidation/wiki/b.-Creating-a-Validator#complex-properties)
 4. [Cascade behaviour](https://github.com/JeremySkinner/FluentValidation/wiki/d.-Configuring-a-Validator#setting-the-cascade-mode)
+5. Nested chained validators and their associated validation rules
 
 
 #### Future Roadmap
@@ -75,5 +76,5 @@ public static IEnumerable<RuleDescription> GetValidationRules <T>(AbstractValida
 3. .WithMessage()
 4. .WithName()
 5. Validation arguments (Greater than 10 characters for example)
-6. Customer validators
+6. Custom validators
 7. .Must()

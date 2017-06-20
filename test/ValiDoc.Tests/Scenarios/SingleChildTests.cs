@@ -27,7 +27,7 @@ namespace ValiDoc.Tests.Scenarios
                 }
             };
 
-            validationRules.ShouldBeEquivalentTo(expectedOutput);
+            validationRules.ShouldBeEquivalentTo(expectedOutput, options => options.WithStrictOrdering());
         }
     }
 }

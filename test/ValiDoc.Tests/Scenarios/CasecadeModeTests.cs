@@ -41,7 +41,7 @@ namespace ValiDoc.Tests.Scenarios
                 }
             };
 
-            validationRules.ShouldBeEquivalentTo(expectedOutput);
+            validationRules.ShouldBeEquivalentTo(expectedOutput, options => options.WithStrictOrdering());
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace ValiDoc.Tests.Scenarios
                 }
             };
 
-            validationRules.ShouldBeEquivalentTo(expectedOutput);
+            validationRules.ShouldBeEquivalentTo(expectedOutput, options => options.WithStrictOrdering());
         }
     }
 }

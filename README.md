@@ -1,4 +1,4 @@
-# ValiDoc
+# ValiDoc [![Build Status](https://travis-ci.org/JamieKeeling/ValiDoc.svg?branch=master)](https://travis-ci.org/JamieKeeling/ValiDoc)
 
 An unobtrusive extension to FluentValidations for documenting validation rules.
 

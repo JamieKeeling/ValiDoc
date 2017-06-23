@@ -1,0 +1,11 @@
+language: csharp
+mono: none
+dotnet: 1.0.4
+dist: trusty
+
+install:
+    - dotnet restore ValiDoc.sln
+
+script:
+    - dotnet build ValiDoc.sln
+    - dotnet test ./test/ValiDoc.Tests/ValiDoc.Tests.csproj

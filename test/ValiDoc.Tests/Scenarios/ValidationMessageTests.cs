@@ -7,7 +7,7 @@ using Xunit;
 
 namespace ValiDoc.Tests.Scenarios
 {
-    public class ValidationArgumentTests
+    public class ValidationMessageTests
     {
         [Fact]
         public void ValiDoc_WithMultipleRuleValidator_OutputMultipleRulesWIthValidationMessage()
@@ -49,7 +49,7 @@ namespace ValiDoc.Tests.Scenarios
             validationRules.ShouldBeEquivalentTo(expectedOutput, options => options.WithStrictOrdering());
         }
 
-        [Fact(Skip = "TODO")]
+        [Fact]
         public void ValiDoc_WithMultipleChildValidatorsAndDeepDocument_ReturnsRulesForAllChildValidatorsAndValidationMessages()
         {
             var validator = new MultipleRuleMultipleChildValidator();
@@ -65,78 +65,90 @@ namespace ValiDoc.Tests.Scenarios
                     FailureSeverity = "Error",
                     MemberName = "First Name",
                     OnFailure = "Continue",
-                    ValidatorName = "NotEmptyValidator"
-                },
+                    ValidatorName = "NotEmptyValidator",
+					ValidationMessage = "'First Name' should not be empty."
+				},
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Last Name",
                     OnFailure = "Continue",
-                    ValidatorName = "NotEmptyValidator"
-                },
+                    ValidatorName = "NotEmptyValidator",
+					ValidationMessage = "'Last Name' should not be empty."
+				},
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Last Name",
                     OnFailure = "Continue",
-                    ValidatorName = "MaximumLengthValidator"
-                },
+                    ValidatorName = "MaximumLengthValidator",
+					ValidationMessage = "'Last Name' must be between {MinLength} and {MaxLength} characters. You entered {TotalLength} characters."
+				},
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "House Number",
                     OnFailure = "Continue",
-                    ValidatorName = "NotEmptyValidator"
-                },
+                    ValidatorName = "NotEmptyValidator",
+	                ValidationMessage = "'House Number' should not be empty."
+				},
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Street Name",
                     OnFailure = "Continue",
-                    ValidatorName = "NotEmptyValidator"
-                },
+                    ValidatorName = "NotEmptyValidator",
+					ValidationMessage = "'Street Name' should not be empty."
+				},
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Post Code",
                     OnFailure = "Continue",
-                    ValidatorName = "NotEmptyValidator"
-                },
+                    ValidatorName = "NotEmptyValidator",
+	                ValidationMessage = "'Post Code' should not be empty."
+				},
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Address",
                     OnFailure = "Continue",
-                    ValidatorName = "AddressValidator"
+                    ValidatorName = "AddressValidator",
+					ValidationMessage = null
                 },
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Employment Status",
                     OnFailure = "Continue",
-                    ValidatorName = "NotEqualValidator"
+                    ValidatorName = "NotEqualValidator",
+	                ValidationMessage = "'Employment Status' should not be equal to '{ComparisonValue}'."
                 },
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Employment Status",
                     OnFailure = "Continue",
-                    ValidatorName = "EnumValidator"
-                },
+                    ValidatorName = "EnumValidator",
+					ValidationMessage = "'Employment Status' has a range of values which does not include 'NotSet'."
+
+				},
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Job Title",
                     OnFailure = "Continue",
-                    ValidatorName = "NotEmptyValidator"
-                },
+                    ValidatorName = "NotEmptyValidator",
+	                ValidationMessage = "'Job Title' should not be empty."
+				},
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Occupation Details",
                     OnFailure = "Continue",
-                    ValidatorName = "OccupationDetailsValidator"
-                },
+                    ValidatorName = "OccupationDetailsValidator",
+					ValidationMessage = null
+                }
             };
 
             validationRules.ShouldBeEquivalentTo(expectedOutput, options => options.WithStrictOrdering());

@@ -57,6 +57,7 @@ namespace ValiDoc
         {
             string validatorName;
             Severity? validationFailureSeverity;
+	        string validationMessage = null;
 
             if (validationRules is ChildValidatorAdaptor childValidator)
             {
@@ -73,18 +74,17 @@ namespace ValiDoc
             {
                 validatorName = validationRules.GetType().Name;
                 validationFailureSeverity = validationRules.Severity;
-            }
-
-            var validationMessage = GetValidationMessage(validationRules, rule, propertyName);
-
+				validationMessage = GetValidationMessage(validationRules, rule, propertyName);
+			}
+			
             yield return new RuleDescription
             {
                 MemberName = propertyName,
                 ValidatorName = validatorName,
                 FailureSeverity = validationFailureSeverity.ToString(),
                 OnFailure = cascadeMode.ToString(),
-                ValidationMessage = validationMessage
-            };
+				ValidationMessage = validationMessage
+			};
         }
 
         private static string GetValidationMessage(IPropertyValidator validator, PropertyRule rule, string propertyName)

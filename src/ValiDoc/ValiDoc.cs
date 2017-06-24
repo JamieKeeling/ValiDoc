@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using FluentValidation;
 using FluentValidation.Internal;
+using FluentValidation.Results;
 using FluentValidation.Validators;
 using ValiDoc.Output;
 
@@ -63,7 +65,8 @@ namespace ValiDoc
 
                 if (documentNested)
                 {
-                    foreach (var ruleDescription in GetNestedRules(propertyName, rule, childValidator)) yield return ruleDescription;
+                    foreach (var ruleDescription in GetNestedRules(propertyName, rule, childValidator))
+                        yield return ruleDescription;
                 }
             }
             else
@@ -72,13 +75,35 @@ namespace ValiDoc
                 validationFailureSeverity = validationRules.Severity;
             }
 
+            var validationMessage = GetValidationMessage(validationRules, rule, propertyName);
+
             yield return new RuleDescription
             {
                 MemberName = propertyName,
                 ValidatorName = validatorName,
                 FailureSeverity = validationFailureSeverity.ToString(),
-                OnFailure = cascadeMode.ToString()
+                OnFailure = cascadeMode.ToString(),
+                ValidationMessage = validationMessage
             };
+        }
+
+        private static string GetValidationMessage(IPropertyValidator validator, PropertyRule rule, string propertyName)
+        {
+            var methods = validator.GetType().GetRuntimeMethods().ToList();
+
+            //TODO: How can we protect ourselves against library changing its method parameters?
+            var prepareMessageFormatterMethod = methods.Single(m => m.Name == "PrepareMessageFormatterForValidationError");
+            var createValidationErrorMethod = methods.Single(m => m.Name == "CreateValidationError");
+
+            //Context should be the instance passed into "Validate", however as GetRules does not expect one we should just create an instance manually
+            //TODO: Is there any way we can ensure we ALWAYS raise the error cases for a validator with the default type
+            // e.g. Default type value accidentaly 'passes' rules that would normally fail..?
+            var validatorContext = new PropertyValidatorContext(new ValidationContext(Activator.CreateInstance(rule.Member.DeclaringType)), rule, propertyName);
+
+            prepareMessageFormatterMethod.Invoke(validator, new object[] { validatorContext });
+            var errorMessage = createValidationErrorMethod.Invoke(validator, new object[] {validatorContext}) as ValidationFailure;
+
+            return errorMessage?.ErrorMessage;
         }
 
         /// <summary>

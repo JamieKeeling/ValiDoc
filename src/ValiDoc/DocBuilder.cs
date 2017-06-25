@@ -7,14 +7,9 @@ using ValiDoc.Output;
 
 namespace ValiDoc
 {
-	public class ValiDoc : IDocumentRules
+	public class DocBuilder : IDocumentRules
 	{
-		public ValiDoc()
-		{
-			//TODO: Maybe useful for behaviour config.	
-		}
-
-		public IEnumerable<RuleDescription> GetRules<T>(AbstractValidator<T> validator, bool includeNested = false)
+		public IEnumerable<RuleDescription> Document<T>(AbstractValidator<T> validator, bool includeChildValidators = false)
 		{
 			if (validator == null)
 			{
@@ -41,9 +36,7 @@ namespace ValiDoc
 
 					foreach (var validationRules in rule.Validators)
 					{
-						var documentedRules = RuleDescriptionBuilder.BuildRuleDescription(validationRules, propertyName, rule.CascadeMode, includeNested, rule);
-
-						foreach (var documentedRule in documentedRules)
+						foreach (var documentedRule in RuleDescriptionBuilder.BuildRuleDescription(validationRules, propertyName, rule.CascadeMode, includeChildValidators, rule))
 						{
 							yield return documentedRule;
 						}

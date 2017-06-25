@@ -14,9 +14,9 @@ namespace ValiDoc.Tests.Scenarios
         {
             var validator = new MultipleRuleValidatorWithGlobalCascade();
 
-	        var ruleGenerator = new ValiDoc();
+	        var ruleGenerator = new DocBuilder();
 
-            var validationRules = ruleGenerator.GetRules(validator).ToList();
+            var validationRules = ruleGenerator.Document(validator).ToList();
 
             var expectedOutput = new List<RuleDescription>
             {
@@ -54,9 +54,9 @@ namespace ValiDoc.Tests.Scenarios
         {
             var validator = new MultipleRuleValidatorWithMixedCascade();
 
-			var ruleGenerator = new ValiDoc();
+			var ruleGenerator = new DocBuilder();
 
-	        var validationRules = ruleGenerator.GetRules(validator).ToList();
+	        var validationRules = ruleGenerator.Document(validator).ToList();
 
 			var expectedOutput = new List<RuleDescription>
             {

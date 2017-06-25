@@ -14,9 +14,9 @@ namespace ValiDoc.Tests.Scenarios
         {
             var validator = new MultipleRuleSingleChildValidator();
 
-	        var ruleGenerator = new ValiDoc();
+	        var ruleGenerator = new DocBuilder();
 
-            var validationRules = ruleGenerator.GetRules(validator).ToList();
+            var validationRules = ruleGenerator.Document(validator).ToList();
 
             validationRules.Should().HaveCount(4);
 

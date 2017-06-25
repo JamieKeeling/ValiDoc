@@ -7,16 +7,16 @@ using Xunit;
 
 namespace ValiDoc.Tests.Scenarios
 {
-    public class DeepDocumentTests
+	public class DeepDocumentTests
     {
         [Fact]
         public void ValiDoc_WithMultipleRuleSingleChildAndDeepDocument_ReturnsRulesForAllIncludingChildValidator()
         {
             var validator = new MultipleRuleSingleChildValidator();
 
-	        var ruleGenerator = new ValiDoc();
+	        var ruleGenerator = new DocBuilder();
 
-            var validationRules = ruleGenerator.GetRules(validator, true).ToList();
+            var validationRules = ruleGenerator.Document(validator, true).ToList();
 
             validationRules.Should().HaveCount(7);
 
@@ -88,9 +88,9 @@ namespace ValiDoc.Tests.Scenarios
         {
             var validator = new MultipleRuleValidator();
 
-	        var ruleGenerator = new ValiDoc();
+	        var ruleGenerator = new DocBuilder();
 
-			var validationRules = ruleGenerator.GetRules(validator, true).ToList();
+			var validationRules = ruleGenerator.Document(validator, true).ToList();
 
             validationRules.Should().HaveCount(3);
 
@@ -123,7 +123,6 @@ namespace ValiDoc.Tests.Scenarios
 			};
 
             validationRules.ShouldBeEquivalentTo(expectedOutput, options => options.WithStrictOrdering());
-
         }
 
         [Fact]
@@ -131,9 +130,9 @@ namespace ValiDoc.Tests.Scenarios
         {
             var validator = new MultipleRuleMultipleChildValidator();
 
-	        var ruleGenerator = new ValiDoc();
+	        var ruleGenerator = new DocBuilder();
 
-            var validationRules = ruleGenerator.GetRules(validator, true).ToList();
+            var validationRules = ruleGenerator.Document(validator, true).ToList();
 
             validationRules.Should().HaveCount(11);
 

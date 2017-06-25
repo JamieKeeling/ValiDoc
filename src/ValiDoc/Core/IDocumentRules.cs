@@ -6,6 +6,6 @@ namespace ValiDoc.Core
 {
 	public interface IDocumentRules
 	{
-		IEnumerable<RuleDescription> GetRules<T>(AbstractValidator<T> validator, bool includeNested = false);
+		IEnumerable<RuleDescription> Document<T>(AbstractValidator<T> validator, bool includeNested = false);
 	}
 }

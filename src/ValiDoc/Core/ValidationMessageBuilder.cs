@@ -18,7 +18,7 @@ namespace ValiDoc.Core
 		    if (validatorMethods == null)
 			    return null;
 
-		    //Context should be the instance passed into "Validate", however as GetRules does not expect one we should just create an instance manually
+		    //Context should be the instance passed into "Validate", however as Document does not expect one we should just create an instance manually
 		    //TODO: Is there any way we can ensure we ALWAYS raise the error cases for a validator with the default type
 		    // e.g. Default type value accidentaly 'passes' rules that would normally fail..?
 		    var validatorContext = FluentValidationHelpers.BuildPropertyValidatorContext(rule, propertyName);

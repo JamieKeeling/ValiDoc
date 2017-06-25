@@ -1,22 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using FluentAssertions;
+using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using ValiDoc.Output;
 using ValiDoc.Tests.TestData.Validators;
 using Xunit;
 
 namespace ValiDoc.Tests.Scenarios
 {
-    public class ValidationMessageTests
+	public class ValidationMessageTests
     {
         [Fact]
         public void ValiDoc_WithMultipleRuleValidator_OutputMultipleRulesWithValidationMessage()
         {
             var validator = new MultipleRuleValidator();
 
-	        var ruleGenerator = new ValiDoc();
+	        var ruleGenerator = new DocBuilder();
 
-            var validationRules = ruleGenerator.GetRules(validator).ToList();
+            var validationRules = ruleGenerator.Document(validator).ToList();
 
             validationRules.Should().HaveCount(3);
 
@@ -56,9 +56,9 @@ namespace ValiDoc.Tests.Scenarios
         {
             var validator = new MultipleRuleMultipleChildValidator();
 
-	        var ruleGenerator = new ValiDoc();
+	        var ruleGenerator = new DocBuilder();
 
-			var validationRules = ruleGenerator.GetRules(validator, true).ToList();
+			var validationRules = ruleGenerator.Document(validator, true).ToList();
 
             validationRules.Should().HaveCount(11);
 

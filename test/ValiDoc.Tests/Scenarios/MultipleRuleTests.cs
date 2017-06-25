@@ -7,14 +7,16 @@ using Xunit;
 
 namespace ValiDoc.Tests.Scenarios
 {
-    public class MultipleRuleTests
+	public class MultipleRuleTests
     {
         [Fact]
         public void ValiDoc_WithMultipleRuleValidator_OutputMultipleRules()
         {
             var validator = new MultipleRuleValidator();
 
-            var validationRules = validator.GetRules().ToList();
+	        var ruleGenerator = new DocBuilder();
+
+            var validationRules = ruleGenerator.Document(validator).ToList();
 
             validationRules.Should().HaveCount(3);
 

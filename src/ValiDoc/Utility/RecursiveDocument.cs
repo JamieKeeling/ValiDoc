@@ -1,4 +1,5 @@
-﻿using FluentValidation.Internal;
+﻿using System;
+using FluentValidation.Internal;
 using FluentValidation.Validators;
 using System.Collections.Generic;
 using System.Reflection;
@@ -7,15 +8,17 @@ using ValiDoc.Output;
 
 namespace ValiDoc.Utility
 {
-	public static class RuleGeneration
+	public static class RecursiveDocument
     {
 	    public static IEnumerable<RuleDescription> GetNestedRules(string propertyName, PropertyRule rule, ChildValidatorAdaptor childValidator)
 	    {
-		    const string methodIdentifier = "GetRules";
+			//TODO: Pull this into a class, define interface and pass type into constructor
+		    var coreDocumentationType = typeof(DocBuilder);
+		    const string methodIdentifier = "Document";
 
-		    var getRulesMethodDefinition = typeof(ValiDoc).ExtractMethodInfo(new[] { methodIdentifier })[methodIdentifier];
+		    var getRulesMethodDefinition = coreDocumentationType.ExtractMethodInfo(new[] { methodIdentifier })[methodIdentifier];
 
-		    // Create the generic method instance of GetRules()
+		    // Create the generic method instance of Document()
 		    getRulesMethodDefinition = getRulesMethodDefinition.MakeGenericMethod(childValidator.ValidatorType.GetTypeInfo().BaseType.GenericTypeArguments[0]);
 
 		    //Parameter 1 = Validator instance derived from AbstractValidator<T>, Parameter 2 = boolean (documentNested)
@@ -26,7 +29,8 @@ namespace ValiDoc.Utility
 		    };
 
 		    //Invoke extension method with validator instance
-		    var nestedRules = getRulesMethodDefinition.Invoke(null, parameterArray) as IEnumerable<RuleDescription>;
+		    var documentationInstance = Activator.CreateInstance(coreDocumentationType);
+		    var nestedRules = getRulesMethodDefinition.Invoke(documentationInstance, parameterArray) as IEnumerable<RuleDescription>;
 
 		    if (nestedRules == null)
 			    yield return null;

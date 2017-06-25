@@ -1,15 +1,15 @@
-﻿using FluentValidation;
-using FluentValidation.Internal;
 using System;
 using System.Collections.Generic;
+using FluentValidation;
+using FluentValidation.Internal;
 using ValiDoc.Core;
 using ValiDoc.Output;
 
 namespace ValiDoc
 {
-	public static class ValiDoc
+	public class DocBuilder : IDocumentRules
 	{
-		public static IEnumerable<RuleDescription> GetRules<T>(this AbstractValidator<T> validator, bool documentNested = false)
+		public IEnumerable<RuleDescription> Document<T>(AbstractValidator<T> validator, bool includeChildValidators = false)
 		{
 			if (validator == null)
 			{
@@ -36,9 +36,7 @@ namespace ValiDoc
 
 					foreach (var validationRules in rule.Validators)
 					{
-						var documentedRules = RuleDescriptionBuilder.BuildRuleDescription(validationRules, propertyName, rule.CascadeMode, documentNested, rule);
-
-						foreach (var documentedRule in documentedRules)
+						foreach (var documentedRule in RuleDescriptionBuilder.BuildRuleDescription(validationRules, propertyName, rule.CascadeMode, includeChildValidators, rule))
 						{
 							yield return documentedRule;
 						}

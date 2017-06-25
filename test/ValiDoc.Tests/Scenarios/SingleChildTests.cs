@@ -14,9 +14,11 @@ namespace ValiDoc.Tests.Scenarios
         {
             var validator = new SingleChildValidator();
 
-            var validationRules = validator.GetRules().ToList();
+			var ruleGenerator = new DocBuilder();
 
-            var expectedOutput = new List<RuleDescription>
+	        var validationRules = ruleGenerator.Document(validator).ToList();
+
+			var expectedOutput = new List<RuleDescription>
             {
                 new RuleDescription
                 {

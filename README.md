@@ -18,9 +18,23 @@ Install-Package ValiDoc -Pre
 using ValiDoc;
 ```
 
-3. Invoke the exposed extension method on any AbstractValidation&lt;T&gt; instance
+3. Create an instance of DocBuilder that will be used to build the documentation
 
-4. Examine the IEnumerable&lt;RuleDescription&gt; output
+```csharp
+var docBuilder = new DocBuilder();
+```
+
+4. Invoke the .Document() method on the DocBuilder, passing in an implementation of AbstractValidator\<T> 
+
+```csharp
+var ruleDocumentation = docBuilder.Document(myValidatorInstance);
+```
+
+5. Pass an optional boolean into the Document method to indicate whether to include Child Validators within the output (Default is set to false)
+
+```csharp
+var ruleDocumentation = docBuilder.Document(myValidatorInstance, true);
+```
 
 ##
 
@@ -40,12 +54,14 @@ public class MultipleRuleSingleChildValidator : AbstractValidator<Person>
 }
 ```
   
-##### Invoking GetRules()
+##### Invocation
 
 ```csharp
-public static IEnumerable<RuleDescription> GetValidationRules <T>(AbstractValidator<T> validator)
+static void Main(string[] args)
 {
-    return validator.GetRules();
+	var myValidator = new MultipleRuleSingleChildValidator();
+	var docBuilder = new DocBuilder();
+	var documentedRules = docBuilder.Document(myValidator);
 }
 ```
 

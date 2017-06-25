@@ -7,14 +7,16 @@ using Xunit;
 
 namespace ValiDoc.Tests.Scenarios
 {
-    public class CasecadeModeTests
+	public class CasecadeModeTests
     {
         [Fact]
         public void ValiDoc_WithMultipleRuleWithGlobalCascadeValidator_OutputMultipleRulesWithIdenticalCascade()
         {
             var validator = new MultipleRuleValidatorWithGlobalCascade();
 
-            var validationRules = validator.GetRules().ToList();
+	        var ruleGenerator = new ValiDoc();
+
+            var validationRules = ruleGenerator.GetRules(validator).ToList();
 
             var expectedOutput = new List<RuleDescription>
             {
@@ -52,9 +54,11 @@ namespace ValiDoc.Tests.Scenarios
         {
             var validator = new MultipleRuleValidatorWithMixedCascade();
 
-            var validationRules = validator.GetRules().ToList();
+			var ruleGenerator = new ValiDoc();
 
-            var expectedOutput = new List<RuleDescription>
+	        var validationRules = ruleGenerator.GetRules(validator).ToList();
+
+			var expectedOutput = new List<RuleDescription>
             {
                 new RuleDescription
                 {

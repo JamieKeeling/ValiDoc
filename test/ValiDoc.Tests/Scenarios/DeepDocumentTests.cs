@@ -14,7 +14,9 @@ namespace ValiDoc.Tests.Scenarios
         {
             var validator = new MultipleRuleSingleChildValidator();
 
-            var validationRules = validator.GetRules(true).ToList();
+	        var ruleGenerator = new ValiDoc();
+
+            var validationRules = ruleGenerator.GetRules(validator, true).ToList();
 
             validationRules.Should().HaveCount(7);
 
@@ -86,7 +88,9 @@ namespace ValiDoc.Tests.Scenarios
         {
             var validator = new MultipleRuleValidator();
 
-            var validationRules = validator.GetRules(true).ToList();
+	        var ruleGenerator = new ValiDoc();
+
+			var validationRules = ruleGenerator.GetRules(validator, true).ToList();
 
             validationRules.Should().HaveCount(3);
 
@@ -127,7 +131,9 @@ namespace ValiDoc.Tests.Scenarios
         {
             var validator = new MultipleRuleMultipleChildValidator();
 
-            var validationRules = validator.GetRules(true).ToList();
+	        var ruleGenerator = new ValiDoc();
+
+            var validationRules = ruleGenerator.GetRules(validator, true).ToList();
 
             validationRules.Should().HaveCount(11);
 

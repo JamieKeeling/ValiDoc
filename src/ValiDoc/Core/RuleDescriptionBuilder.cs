@@ -24,7 +24,7 @@ namespace ValiDoc.Core
 			    if (documentNested)
 			    {
 				    //Recursively document the validator rules
-				    foreach (var ruleDescription in RuleGeneration.GetNestedRules(propertyName, rule, childValidator))
+				    foreach (var ruleDescription in RecursiveDocument.GetNestedRules(propertyName, rule, childValidator))
 					    yield return ruleDescription;
 			    }
 		    }

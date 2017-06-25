@@ -23,22 +23,25 @@ namespace ValiDoc.Tests.Scenarios
                     FailureSeverity = "Error",
                     MemberName = "First Name",
                     OnFailure = "StopOnFirstFailure",
-                    ValidatorName = "NotEmptyValidator"
-                },
+                    ValidatorName = "NotEmptyValidator",
+	                ValidationMessage = "'First Name' should not be empty."
+				},
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Last Name",
                     OnFailure = "StopOnFirstFailure",
-                    ValidatorName = "NotEmptyValidator"
-                },
+                    ValidatorName = "NotEmptyValidator",
+	                ValidationMessage = "'Last Name' should not be empty."
+				},
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Last Name",
                     OnFailure = "StopOnFirstFailure",
-                    ValidatorName = "MaximumLengthValidator"
-                }
+                    ValidatorName = "MaximumLengthValidator",
+	                ValidationMessage = "'Last Name' must be between {MinLength} and {MaxLength} characters. You entered {TotalLength} characters."
+				}
             };
 
             validationRules.ShouldBeEquivalentTo(expectedOutput, options => options.WithStrictOrdering());
@@ -58,22 +61,26 @@ namespace ValiDoc.Tests.Scenarios
                     FailureSeverity = "Error",
                     MemberName = "First Name",
                     OnFailure = "Continue",
-                    ValidatorName = "NotEmptyValidator"
+                    ValidatorName = "NotEmptyValidator",
+					ValidationMessage = "'First Name' should not be empty."
                 },
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Last Name",
                     OnFailure = "StopOnFirstFailure",
-                    ValidatorName = "NotEmptyValidator"
+                    ValidatorName = "NotEmptyValidator",
+					ValidationMessage = "'Last Name' should not be empty."
                 },
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Last Name",
                     OnFailure = "StopOnFirstFailure",
-                    ValidatorName = "MaximumLengthValidator"
-                }
+                    ValidatorName = "MaximumLengthValidator",
+					ValidationMessage = "'Last Name' must be between {MinLength} and {MaxLength} characters. You entered {TotalLength} characters."
+
+				}
             };
 
             validationRules.ShouldBeEquivalentTo(expectedOutput, options => options.WithStrictOrdering());

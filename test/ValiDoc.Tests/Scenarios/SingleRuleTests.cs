@@ -23,7 +23,8 @@ namespace ValiDoc.Tests.Scenarios
                     FailureSeverity = "Error",
                     MemberName = "First Name",
                     OnFailure = "Continue",
-                    ValidatorName = "NotEmptyValidator"
+                    ValidatorName = "NotEmptyValidator",
+					ValidationMessage = "'First Name' should not be empty."
                 }
             };
 

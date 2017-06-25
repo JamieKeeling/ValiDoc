@@ -23,7 +23,8 @@ namespace ValiDoc.Tests.Scenarios
                     FailureSeverity = "Error",
                     MemberName = "Address",
                     OnFailure = "Continue",
-                    ValidatorName = "AddressValidator"
+                    ValidatorName = "AddressValidator",
+					ValidationMessage = null
                 }
             };
 

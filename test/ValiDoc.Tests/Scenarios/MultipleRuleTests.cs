@@ -20,28 +20,31 @@ namespace ValiDoc.Tests.Scenarios
 
             var expectedOutput = new List<RuleDescription>
             {
-                new RuleDescription
-                {
-                    FailureSeverity = "Error",
-                    MemberName = "First Name",
-                    OnFailure = "Continue",
-                    ValidatorName = "NotNullValidator"
-                },
-                new RuleDescription
-                {
-                    FailureSeverity = "Error",
-                    MemberName = "Last Name",
-                    OnFailure = "Continue",
-                    ValidatorName = "NotEmptyValidator"
-                },
-                new RuleDescription
-                {
-                    FailureSeverity = "Error",
-                    MemberName = "Last Name",
-                    OnFailure = "Continue",
-                    ValidatorName = "MaximumLengthValidator"
-                }
-            };
+				new RuleDescription
+	            {
+		            FailureSeverity = "Error",
+		            MemberName = "First Name",
+		            OnFailure = "Continue",
+		            ValidatorName = "NotNullValidator",
+		            ValidationMessage = "'First Name' must not be empty."
+	            },
+	            new RuleDescription
+	            {
+		            FailureSeverity = "Error",
+		            MemberName = "Last Name",
+		            OnFailure = "Continue",
+		            ValidatorName = "NotEmptyValidator",
+		            ValidationMessage = "'Last Name' should not be empty."
+	            },
+	            new RuleDescription
+	            {
+		            FailureSeverity = "Error",
+		            MemberName = "Last Name",
+		            OnFailure = "Continue",
+		            ValidatorName = "MaximumLengthValidator",
+		            ValidationMessage = "'Last Name' must be between {MinLength} and {MaxLength} characters. You entered {TotalLength} characters."
+	            }
+			};
 
             validationRules.ShouldBeEquivalentTo(expectedOutput, options => options.WithStrictOrdering());
         }

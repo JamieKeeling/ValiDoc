@@ -25,28 +25,32 @@ namespace ValiDoc.Tests.Scenarios
                     FailureSeverity = "Error",
                     MemberName = "First Name",
                     OnFailure = "Continue",
-                    ValidatorName = "NotEmptyValidator"
+                    ValidatorName = "NotEmptyValidator",
+					ValidationMessage = "'First Name' should not be empty."
                 },
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Last Name",
                     OnFailure = "Continue",
-                    ValidatorName = "NotEmptyValidator"
-                },
+                    ValidatorName = "NotEmptyValidator",
+	                ValidationMessage = "'Last Name' should not be empty."
+				},
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Last Name",
                     OnFailure = "Continue",
-                    ValidatorName = "MaximumLengthValidator"
-                },
+                    ValidatorName = "MaximumLengthValidator",
+	                ValidationMessage = "'Last Name' must be between {MinLength} and {MaxLength} characters. You entered {TotalLength} characters."
+				},
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
                     MemberName = "Address",
                     OnFailure = "Continue",
-                    ValidatorName = "AddressValidator"
+                    ValidatorName = "AddressValidator",
+					ValidationMessage = null
                 }
             };
 

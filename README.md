@@ -52,21 +52,22 @@ public static IEnumerable<RuleDescription> GetValidationRules <T>(AbstractValida
 
 ##### Output
 
-| MemberName        | ValidatorName           | FailureSeverity  | OnFailure |
-| :-------------: |:-------------:| :-----:|:---------:|
-| First Name      | NotEmptyValidator | Error | Continue |
-| Last Name      | NotEmptyValidator      |   Error | Continue |
-| Last Name | MaximumLengthValidator      |    Error | Continue |
+| MemberName        | ValidatorName           | FailureSeverity  | OnFailure | ValidationMessage
+| :-------------: |:-------------:| :-----:|:---------:|:---------:| 
+| First Name      | NotEmptyValidator | Error | Continue | 'First Name' should not be empty.
+| Last Name      | NotEmptyValidator      |   Error | Continue | 'Last Name' should not be empty.
+| Last Name | MaximumLengthValidator      |    Error | Continue | 'Last Name' must be between \{MinLength} and \{MaxLength} characters. You entered \{TotalLength} characters.
 | Address | AddressValidator | Error | Continue |
 
 ## 
 #### Supported Scenarios
 
-1. [Built in validators](https://github.com/JeremySkinner/FluentValidation/wiki/c.-Built-In-Validators)
-2. [Chained validators for the same property](https://github.com/JeremySkinner/FluentValidation/wiki/b.-Creating-a-Validator#chaining-validators-for-the-same-property)
-3. [Complex properties](https://github.com/JeremySkinner/FluentValidation/wiki/b.-Creating-a-Validator#complex-properties)
-4. [Cascade behaviour](https://github.com/JeremySkinner/FluentValidation/wiki/d.-Configuring-a-Validator#setting-the-cascade-mode)
-5. Nested chained validators and their associated validation rules
+1. Nested chained validators and their associated validation rules
+2. Extraction of validation messages (Validation arguments not currently included
+3. [Built in validators](https://github.com/JeremySkinner/FluentValidation/wiki/c.-Built-In-Validators)
+4. [Chained validators for the same property](https://github.com/JeremySkinner/FluentValidation/wiki/b.-Creating-a-Validator#chaining-validators-for-the-same-property)
+5. [Complex properties](https://github.com/JeremySkinner/FluentValidation/wiki/b.-Creating-a-Validator#complex-properties)
+6. [Cascade behaviour](https://github.com/JeremySkinner/FluentValidation/wiki/d.-Configuring-a-Validator#setting-the-cascade-mode)
 
 
 #### Future Roadmap

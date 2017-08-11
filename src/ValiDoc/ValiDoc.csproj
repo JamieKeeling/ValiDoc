@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.6.1</TargetFramework>
-    <Version>0.5.0-alpha</Version>
+    <TargetFramework>netstandard1.0</TargetFramework>
+    <Version>0.6.0-beta</Version>
     <Description>An unobtrusive extension to FluentValidations for documenting validation rules.</Description>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Authors>Jamie Keeling</Authors>
     <Company />
@@ -15,10 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FluentValidation" Version="7.0.0" />
+    <Compile Remove="Behaviour\**" />
+    <EmbeddedResource Remove="Behaviour\**" />
+    <None Remove="Behaviour\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Behaviour\" />
+    <PackageReference Include="FluentValidation" Version="7.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.1" />
   </ItemGroup>
 </Project>

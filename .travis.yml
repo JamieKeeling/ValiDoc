@@ -8,4 +8,5 @@ install:
 
 script:
     - dotnet build ValiDoc.sln
-    - dotnet test ./test/ValiDoc.Tests/ValiDoc.Tests.csproj
+    - dotnet test ./test/ValiDoc.Integration.Tests/ValiDoc.Integration.Tests.csproj
+    - dotnet test ./test/ValiDoc.Unit.Tests/ValiDoc.Unit.Tests.csproj

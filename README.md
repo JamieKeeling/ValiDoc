@@ -12,29 +12,44 @@ An unobtrusive extension to FluentValidations for documenting validation rules.
 Install-Package ValiDoc -Pre
 ```
 
-2. Reference ValiDoc namespace in the same class as your validator usage
+2. Configure Dependency Injection
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    // Add ValiDoc dependencies
+    services.AddValiDoc();
+}
+```
+
+3. Reference ValiDoc namespace 
 
 ```csharp
 using ValiDoc;
 ```
 
-3. Create an instance of DocBuilder that will be used to build the documentation
+4. Constructor Inject the RuleDescriptor
 
 ```csharp
-var docBuilder = new DocBuilder();
+private readonly IRuleDescriptor _ruleDescriptor;
+
+public ValuesController(IRuleDescriptor ruleDescriptor)
+{
+    _ruleDescriptor = ruleDescriptor;
+}
 ```
 
-4. Invoke the .Document() method on the DocBuilder, passing in an implementation of AbstractValidator\<T> 
+4. Create an instance of DocBuilder that will be used to build the documentation
+
+```csharp
+var docBuilder = new DocBuilder(_ruleDescriptor);
+```
+
+5. Invoke the .Document() method on the DocBuilder, passing in an implementation of AbstractValidator\<T> 
 
 ```csharp
 var ruleDocumentation = docBuilder.Document(myValidatorInstance);
 ```
 
-5. Pass an optional boolean into the Document method to indicate whether to include Child Validators within the output (Default is set to false)
-
-```csharp
-var ruleDocumentation = docBuilder.Document(myValidatorInstance, true);
-```
 
 ##
 
@@ -49,19 +64,33 @@ public class MultipleRuleSingleChildValidator : AbstractValidator<Person>
 	{
 	    RuleFor(p => p.FirstName).NotEmpty();
 	    RuleFor(p => p.LastName).NotEmpty().MaximumLength(20);
-            RuleFor(p => p.Address).SetValidator(new AddressValidator());
+        RuleFor(p => p.Address).SetValidator(new AddressValidator());
 	}
 }
 ```
   
-##### Invocation
+##### Dependency Injection and Invocation
 
 ```csharp
-static void Main(string[] args)
+[Route("api/[controller]")]
+public class ValidationController : Controller
 {
-	var myValidator = new MultipleRuleSingleChildValidator();
-	var docBuilder = new DocBuilder();
-	var documentedRules = docBuilder.Document(myValidator);
+    private readonly IRuleDescriptor _ruleDescriptor;
+
+    public ValidationController(IRuleDescriptor ruleDescriptor)
+    {
+        _ruleDescriptor = ruleDescriptor;
+    }
+
+    [HttpGet]
+    public IEnumerable<RuleDescription> ValidatorDocumentation()
+    {
+        var validator = new MultipleRuleSingleChildValidator();
+
+        var docBuilder = new ValiDoc.DocBuilder(_ruleDescriptor);
+
+        return docBuilder.Document(validator);
+    }
 }
 ```
 
@@ -72,18 +101,17 @@ static void Main(string[] args)
 | :-------------: |:-------------:| :-----:|:---------:|:---------:| 
 | First Name      | NotEmptyValidator | Error | Continue | 'First Name' should not be empty.
 | Last Name      | NotEmptyValidator      |   Error | Continue | 'Last Name' should not be empty.
-| Last Name | MaximumLengthValidator      |    Error | Continue | 'Last Name' must be between \{MinLength} and \{MaxLength} characters. You entered \{TotalLength} characters.
-| Address | AddressValidator | Error | Continue |
+| Last Name | MaximumLengthValidator      |    Error | Continue | 'Last Name' must be less than {MaxLength} characters. You entered {TotalLength} characters.
+| Address | AddressValidator | Error | Continue | N/A - Refer to specific AddressValidator documentation
 
 ## 
 #### Supported Scenarios
 
-1. Nested chained validators and their associated validation rules
-2. Extraction of validation messages (Validation arguments not currently included
-3. [Built in validators](https://github.com/JeremySkinner/FluentValidation/wiki/c.-Built-In-Validators)
-4. [Chained validators for the same property](https://github.com/JeremySkinner/FluentValidation/wiki/b.-Creating-a-Validator#chaining-validators-for-the-same-property)
-5. [Complex properties](https://github.com/JeremySkinner/FluentValidation/wiki/b.-Creating-a-Validator#complex-properties)
-6. [Cascade behaviour](https://github.com/JeremySkinner/FluentValidation/wiki/d.-Configuring-a-Validator#setting-the-cascade-mode)
+1. Extraction of validation messages (Configured argument values not included)
+2. [Built in validators](https://github.com/JeremySkinner/FluentValidation/wiki/c.-Built-In-Validators)
+3. [Chained validators for the same property](https://github.com/JeremySkinner/FluentValidation/wiki/b.-Creating-a-Validator#chaining-validators-for-the-same-property)
+4. [Complex properties](https://github.com/JeremySkinner/FluentValidation/wiki/b.-Creating-a-Validator#complex-properties)
+5. [Cascade behaviour](https://github.com/JeremySkinner/FluentValidation/wiki/d.-Configuring-a-Validator#setting-the-cascade-mode)
 
 
 #### Future Roadmap

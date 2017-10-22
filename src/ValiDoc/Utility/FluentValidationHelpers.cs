@@ -5,9 +5,9 @@ using System;
 
 namespace ValiDoc.Utility
 {
-	public static class FluentValidationHelpers
+    public class FluentValidationHelpers : IFluentValidationHelper
     {
-	    public static PropertyValidatorContext BuildPropertyValidatorContext(PropertyRule rule, string propertyName)
+	    public PropertyValidatorContext BuildPropertyValidatorContext(PropertyRule rule, string propertyName)
 	    {
 		    return new PropertyValidatorContext(new ValidationContext(Activator.CreateInstance(rule.Member.DeclaringType)), rule, propertyName);
 	    }

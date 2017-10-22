@@ -1,38 +1,44 @@
-﻿using FluentValidation;
+﻿using System;
+using FluentValidation;
 using FluentValidation.Internal;
 using FluentValidation.Validators;
 using System.Collections.Generic;
 using ValiDoc.Output;
-using ValiDoc.Utility;
 
 namespace ValiDoc.Core
 {
-	public static class RuleDescriptionBuilder
+    public class RuleDescriptionBuilder : IRuleDescriptor
     {
-	    public static IEnumerable<RuleDescription> BuildRuleDescription(IPropertyValidator validationRules, string propertyName, CascadeMode cascadeMode, bool documentNested, PropertyRule rule)
+        private readonly IValidatorErrorMessageBuilder _validatorErrorMessageBuilder;
+
+        public RuleDescriptionBuilder(IValidatorErrorMessageBuilder validatorErrorMessageBuilder)
+        {
+            _validatorErrorMessageBuilder = validatorErrorMessageBuilder;
+        }
+
+	    public IEnumerable<RuleDescription> BuildRuleDescription(IPropertyValidator validationRules, string propertyName, CascadeMode cascadeMode, PropertyRule rule)
 	    {
+	        if (validationRules == null)
+                throw new ArgumentNullException(nameof(validationRules));
+
+            if(string.IsNullOrWhiteSpace(propertyName))
+                throw new ArgumentNullException(nameof(propertyName));
+
 		    string validatorName;
 		    Severity? validationFailureSeverity;
 		    string validationMessage = null;
-
-		    // Check whether the rule in question is another validator (ChildValidator)
+            
 		    if (validationRules is ChildValidatorAdaptor childValidator)
 		    {
 			    validatorName = childValidator.ValidatorType.Name;
 			    validationFailureSeverity = childValidator.Severity;
-
-			    if (documentNested)
-			    {
-				    //Recursively document the validator rules
-				    foreach (var ruleDescription in RecursiveDocument.GetNestedRules(propertyName, rule, childValidator))
-					    yield return ruleDescription;
-			    }
+		        validationMessage = $"N/A - Refer to specific {validatorName} documentation";
 		    }
 		    else
 		    {
 			    validatorName = validationRules.GetType().Name;
 			    validationFailureSeverity = validationRules.Severity;
-			    validationMessage = ValidationMessageBuilder.GetValidationMessage(validationRules, rule, propertyName);
+			    validationMessage = _validatorErrorMessageBuilder.GetErrorMessage(validationRules, rule, propertyName);
 		    }
 
 		    yield return new RuleDescription

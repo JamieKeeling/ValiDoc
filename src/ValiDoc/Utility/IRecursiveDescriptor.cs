@@ -8,6 +8,6 @@ namespace ValiDoc.Utility
 {
     public interface IRecursiveDescriptor
     {
-        IEnumerable<RuleDescription> GetNestedRules(string propertyName, PropertyRule rule, ChildValidatorAdaptor childValidator, IRuleDescriptor ruleDescriptor);
+        IEnumerable<RuleDescription> GetNestedRules(string propertyName, PropertyRule rule, ChildValidatorAdaptor childValidator, IRuleBuilder ruleBuilder);
     }
 }

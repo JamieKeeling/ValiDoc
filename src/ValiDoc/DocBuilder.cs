@@ -9,14 +9,14 @@ namespace ValiDoc
 {
     public class DocBuilder : IDocumentRules
 	{
-	    private readonly IRuleDescriptor _ruleDescriptor;
+	    private readonly IRuleBuilder _ruleBuilder;
 
-	    public DocBuilder(IRuleDescriptor ruleDescriptor)
+	    public DocBuilder(IRuleBuilder ruleBuilder)
 	    {
-	        _ruleDescriptor = ruleDescriptor;
+	        _ruleBuilder = ruleBuilder;
 	    }
 
-		public IEnumerable<RuleDescription> Document<T>(AbstractValidator<T> validator)
+		public IEnumerable<RuleDescriptor> Document<T>(AbstractValidator<T> validator)
 		{
 			if (validator == null)
 			{
@@ -36,15 +36,9 @@ namespace ValiDoc
 					var rule = (PropertyRule)validationRule;
 					var propertyName = rule.GetDisplayName();
 
-					foreach (var validationRules in rule.Validators)
-					{
-						foreach (var documentedRule in _ruleDescriptor.BuildRuleDescription(validationRules, propertyName, rule.CascadeMode, rule))
-						{
-							yield return documentedRule;
-						}
-					}
-				}
-			}
+				    yield return _ruleBuilder.BuildRuleDescription(rule.Validators, propertyName, rule.CascadeMode, rule);
+                }
+            }
 		}
 	}
 }

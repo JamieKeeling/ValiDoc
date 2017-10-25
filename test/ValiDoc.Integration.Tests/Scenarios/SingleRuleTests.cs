@@ -20,18 +20,25 @@ namespace ValiDoc.Integration.Tests.Scenarios
 
             var validationRules = ruleGenerator.Document(validator).ToList();
 
-            var expectedOutput = new List<RuleDescription>
+            var expectedOutput = new List<RuleDescriptor>
             {
-                new RuleDescription
+                new RuleDescriptor
                 {
-                    FailureSeverity = "Error",
                     MemberName = "First Name",
-                    OnFailure = "Continue",
-                    ValidatorName = "NotEmptyValidator",
-					ValidationMessage = "'First Name' should not be empty."
-                }
+                    Rules = new List<RuleDescription>
+                    {
+                        new RuleDescription
+                        {
+                            FailureSeverity = "Error",
+                            OnFailure = "Continue",
+                            ValidatorName = "NotEmptyValidator",
+                            ValidationMessage = "'First Name' should not be empty."
+                        }
+                    }
+                }              
             };
 
+            validationRules.Should().HaveCount(1);
             validationRules.ShouldBeEquivalentTo(expectedOutput, options => options.WithStrictOrdering());
         }
     }

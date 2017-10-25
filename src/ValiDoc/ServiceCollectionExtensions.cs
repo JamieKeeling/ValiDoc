@@ -12,7 +12,7 @@ namespace ValiDoc
             services.AddTransient<IRecursiveDescriptor, RecursiveDescriptor>();
             services.AddTransient<IValidatorErrorMessageBuilder, ValidatorErrorMessageBuilder>();
             services.AddTransient<IFluentValidationHelper, FluentValidationHelpers>();
-            services.AddTransient<IRuleDescriptor, RuleDescriptionBuilder>();
+            services.AddTransient<IRuleBuilder, RuleDescriptionBuilder>();
 
             return services;
         }

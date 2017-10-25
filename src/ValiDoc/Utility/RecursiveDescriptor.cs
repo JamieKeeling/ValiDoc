@@ -19,7 +19,7 @@ namespace ValiDoc.Utility
         }
 
         #warning ALPHA - Use at your own risk!
-        public IEnumerable<RuleDescription> GetNestedRules(string propertyName, PropertyRule rule, ChildValidatorAdaptor childValidator, IRuleDescriptor ruleDescriptor)
+        public IEnumerable<RuleDescription> GetNestedRules(string propertyName, PropertyRule rule, ChildValidatorAdaptor childValidator, IRuleBuilder ruleBuilder)
 	    {
 			//HACK: I hate this explicit defintion.
 		    var coreDocumentationType = typeof(DocBuilder);
@@ -38,7 +38,7 @@ namespace ValiDoc.Utility
 		    };
 
 		    //Invoke extension method with validator instance
-		    var documentationInstance = Activator.CreateInstance(coreDocumentationType, ruleDescriptor);
+		    var documentationInstance = Activator.CreateInstance(coreDocumentationType, ruleBuilder);
 		    var nestedRules = getRulesMethodDefinition.Invoke(documentationInstance, parameterArray) as IEnumerable<RuleDescription>;
 
 		    if (nestedRules == null)

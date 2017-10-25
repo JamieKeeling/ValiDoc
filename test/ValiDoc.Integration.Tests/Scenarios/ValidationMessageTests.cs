@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using FluentAssertions;
+using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using ValiDoc.CommonTest.TestData.Validators;
 using ValiDoc.Core;
 using ValiDoc.Output;
@@ -9,7 +9,7 @@ using Xunit;
 
 namespace ValiDoc.Integration.Tests.Scenarios
 {
-	public class ValidationMessageTests
+    public class ValidationMessageTests
     {
         [Fact]
         public void ValiDoc_WithMultipleRuleValidator_OutputMultipleRulesWithValidationMessage()
@@ -20,44 +20,53 @@ namespace ValiDoc.Integration.Tests.Scenarios
 
             var validationRules = ruleGenerator.Document(validator).ToList();
 
-            validationRules.Should().HaveCount(4);
-
-            var expectedOutput = new List<RuleDescription>
+            var expectedOutput = new List<RuleDescriptor>
             {
-                new RuleDescription
+                new RuleDescriptor
                 {
-                    FailureSeverity = "Error",
                     MemberName = "First Name",
-                    OnFailure = "Continue",
-                    ValidatorName = "NotNullValidator",
-                    ValidationMessage = "'First Name' must not be empty."
+                    Rules = new List<RuleDescription>
+                    {
+                        new RuleDescription
+                        {
+                            FailureSeverity = "Error",
+                            OnFailure = "Continue",
+                            ValidatorName = "NotNullValidator",
+                            ValidationMessage = "'First Name' must not be empty."
+                        }
+                    }
                 },
-                new RuleDescription
+                new RuleDescriptor
                 {
-                    FailureSeverity = "Error",
                     MemberName = "Last Name",
-                    OnFailure = "Continue",
-                    ValidatorName = "NotEmptyValidator",
-                    ValidationMessage = "'Last Name' should not be empty." 
-                },
-                new RuleDescription
-                {
-                    FailureSeverity = "Error",
-                    MemberName = "Last Name",
-                    OnFailure = "Continue",
-                    ValidatorName = "MinimumLengthValidator",
-                    ValidationMessage = "'Last Name' must be more than {MinLength} characters. You entered {TotalLength} characters."
-                },
-                new RuleDescription
-                {
-                    FailureSeverity = "Error",
-                    MemberName = "Last Name",
-                    OnFailure = "Continue",
-                    ValidatorName = "MaximumLengthValidator",
-                    ValidationMessage = "'Last Name' must be less than {MaxLength} characters. You entered {TotalLength} characters."
+                    Rules = new List<RuleDescription>
+                    {
+                        new RuleDescription
+                        {
+                            FailureSeverity = "Error",
+                            OnFailure = "Continue",
+                            ValidatorName = "NotEmptyValidator",
+                            ValidationMessage = "'Last Name' should not be empty."
+                        },
+                        new RuleDescription
+                        {
+                            FailureSeverity = "Error",
+                            OnFailure = "Continue",
+                            ValidatorName = "MinimumLengthValidator",
+                            ValidationMessage = "'Last Name' must be more than {MinLength} characters. You entered {TotalLength} characters."
+                        },
+                        new RuleDescription
+                        {
+                            FailureSeverity = "Error",
+                            OnFailure = "Continue",
+                            ValidatorName = "MaximumLengthValidator",
+                            ValidationMessage = "'Last Name' must be less than {MaxLength} characters. You entered {TotalLength} characters."
+                        }
+                    }
                 }
             };
 
+            validationRules.Should().HaveCount(2);
             validationRules.ShouldBeEquivalentTo(expectedOutput, options => options.WithStrictOrdering());
         }
 
@@ -77,7 +86,6 @@ namespace ValiDoc.Integration.Tests.Scenarios
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
-                    MemberName = "First Name",
                     OnFailure = "Continue",
                     ValidatorName = "NotEmptyValidator",
 					ValidationMessage = "'First Name' should not be empty."
@@ -85,7 +93,6 @@ namespace ValiDoc.Integration.Tests.Scenarios
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
-                    MemberName = "Last Name",
                     OnFailure = "Continue",
                     ValidatorName = "NotEmptyValidator",
 					ValidationMessage = "'Last Name' should not be empty."
@@ -93,7 +100,6 @@ namespace ValiDoc.Integration.Tests.Scenarios
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
-                    MemberName = "Last Name",
                     OnFailure = "Continue",
                     ValidatorName = "MaximumLengthValidator",
 					ValidationMessage = "'Last Name' must be between {MinLength} and {MaxLength} characters. You entered {TotalLength} characters."
@@ -101,7 +107,6 @@ namespace ValiDoc.Integration.Tests.Scenarios
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
-                    MemberName = "House Number",
                     OnFailure = "Continue",
                     ValidatorName = "NotEmptyValidator",
 	                ValidationMessage = "'House Number' should not be empty."
@@ -109,7 +114,6 @@ namespace ValiDoc.Integration.Tests.Scenarios
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
-                    MemberName = "Street Name",
                     OnFailure = "Continue",
                     ValidatorName = "NotEmptyValidator",
 					ValidationMessage = "'Street Name' should not be empty."
@@ -117,7 +121,6 @@ namespace ValiDoc.Integration.Tests.Scenarios
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
-                    MemberName = "Post Code",
                     OnFailure = "Continue",
                     ValidatorName = "NotEmptyValidator",
 	                ValidationMessage = "'Post Code' should not be empty."
@@ -125,7 +128,6 @@ namespace ValiDoc.Integration.Tests.Scenarios
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
-                    MemberName = "Address",
                     OnFailure = "Continue",
                     ValidatorName = "AddressValidator",
 					ValidationMessage = null
@@ -133,7 +135,6 @@ namespace ValiDoc.Integration.Tests.Scenarios
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
-                    MemberName = "Employment Status",
                     OnFailure = "Continue",
                     ValidatorName = "NotEqualValidator",
 	                ValidationMessage = "'Employment Status' should not be equal to '{ComparisonValue}'."
@@ -141,7 +142,6 @@ namespace ValiDoc.Integration.Tests.Scenarios
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
-                    MemberName = "Employment Status",
                     OnFailure = "Continue",
                     ValidatorName = "EnumValidator",
 					ValidationMessage = "'Employment Status' has a range of values which does not include 'NotSet'."
@@ -150,7 +150,6 @@ namespace ValiDoc.Integration.Tests.Scenarios
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
-                    MemberName = "Job Title",
                     OnFailure = "Continue",
                     ValidatorName = "NotEmptyValidator",
 	                ValidationMessage = "'Job Title' should not be empty."
@@ -158,7 +157,6 @@ namespace ValiDoc.Integration.Tests.Scenarios
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
-                    MemberName = "Occupation Details",
                     OnFailure = "Continue",
                     ValidatorName = "OccupationDetailsValidator",
 					ValidationMessage = null

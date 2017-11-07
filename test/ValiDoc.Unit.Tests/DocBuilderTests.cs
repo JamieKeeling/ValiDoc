@@ -21,25 +21,28 @@ namespace ValiDoc.Unit.Tests
         {
             var singleRuleValidator = new SingleRuleValidator();
 
-            var expectedRuleDescription = new List<RuleDescription>
+            var expectedRuleDescription = new RuleDescriptor
             {
+                MemberName = "First Name",
+                Rules = new List<RuleDescription>
+                {
                 new RuleDescription
                 {
                     FailureSeverity = "Error",
-                    MemberName = "First Name",
                     OnFailure = "Continue",
                     ValidationMessage = "Mock message",
                     ValidatorName = "NotEmptyValidator"
                 }
+                }
             };
 
-            var mockRuleDescriptor = new Mock<IRuleDescriptor>();
-            mockRuleDescriptor.Setup(x => x.BuildRuleDescription(It.IsAny<IPropertyValidator>(), It.IsAny<string>(),
+            var mockRuleDescriptor = new Mock<IRuleBuilder>();
+            mockRuleDescriptor.Setup(x => x.BuildRuleDescription(It.IsAny<IEnumerable<IPropertyValidator>>(), It.IsAny<string>(),
                     It.IsAny<CascadeMode>(), It.IsAny<PropertyRule>())).Returns(expectedRuleDescription);
 
             var docBuilder = new DocBuilder(mockRuleDescriptor.Object);
 
-            var actualResult = docBuilder.Document(singleRuleValidator);
+            var actualResult = docBuilder.Document(singleRuleValidator).ToList();
 
             actualResult.Should().HaveCount(1);
             actualResult.Should().BeEquivalentTo(expectedRuleDescription);
@@ -48,7 +51,7 @@ namespace ValiDoc.Unit.Tests
         [Fact]
         public void DocBuilder_WithNullValidator_ThrowsArgumentNullException()
         {
-            var docBuilder = new DocBuilder(Mock.Of<IRuleDescriptor>());
+            var docBuilder = new DocBuilder(Mock.Of<IRuleBuilder>());
 
             var thrownException = Record.Exception(() => docBuilder.Document<AbstractValidator<Address>>(null).ToList()); //.ToList() to materialise exception
 
@@ -58,7 +61,7 @@ namespace ValiDoc.Unit.Tests
         [Fact]
         public void DocBuilder_WithNoRuleValidator_ReturnEmptyOutput()
         {
-            var docBuilder = new DocBuilder(Mock.Of<IRuleDescriptor>());
+            var docBuilder = new DocBuilder(Mock.Of<IRuleBuilder>());
 
             var actualOutput = docBuilder.Document(new NoRulesValidator());
 

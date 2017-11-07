@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using FluentAssertions;
+using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using ValiDoc.CommonTest.TestData.Validators;
 using ValiDoc.Core;
 using ValiDoc.Output;
@@ -20,18 +20,25 @@ namespace ValiDoc.Integration.Tests.Scenarios
 
 	        var validationRules = ruleGenerator.Document(validator).ToList();
 
-			var expectedOutput = new List<RuleDescription>
+			var expectedOutput = new List<RuleDescriptor>
             {
-                new RuleDescription
-                {
-                    FailureSeverity = "Error",
+                new RuleDescriptor
+                { 
                     MemberName = "Address",
-                    OnFailure = "Continue",
-                    ValidatorName = "AddressValidator",
-					ValidationMessage = "N/A - Refer to specific AddressValidator documentation"
+                    Rules = new List<RuleDescription>
+                    {
+                        new RuleDescription
+                        {
+                            FailureSeverity = "Error",
+                            OnFailure = "Continue",
+                            ValidatorName = "AddressValidator",
+                            ValidationMessage = "N/A - Refer to specific AddressValidator documentation"
+                        }
+                    }
                 }
             };
 
+            validationRules.Should().HaveCount(1);
             validationRules.ShouldBeEquivalentTo(expectedOutput, options => options.WithStrictOrdering());
         }
     }

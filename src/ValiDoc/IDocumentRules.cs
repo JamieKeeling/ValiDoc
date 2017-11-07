@@ -6,6 +6,6 @@ namespace ValiDoc
 {
 	public interface IDocumentRules
 	{
-		IEnumerable<RuleDescription> Document<T>(AbstractValidator<T> validator);
+		IEnumerable<RuleDescriptor> Document<T>(AbstractValidator<T> validator);
 	}
 }

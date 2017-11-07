@@ -1,0 +1,11 @@
+#Base subsequent instructions on the standard 'dotnet core' image.
+FROM microsoft/dotnet:1.1.4-sdk
+
+#Copy the application into the staging folder and set context to the working directory for future steps.
+COPY . /app
+WORKDIR /app
+
+#Restore packages and execute all tests 
+RUN dotnet restore
+RUN dotnet test ./test/ValiDoc.Unit.Tests/ValiDoc.Unit.Tests.csproj
+RUN dotnet test ./test/ValiDoc.Integration.Tests/ValiDoc.Integration.Tests.csproj

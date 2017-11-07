@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+VisualStudioVersion = 15.0.27004.2005
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8E3E523D-6081-4793-9ED9-653B850F0558}"
 EndProject
@@ -13,12 +13,13 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DBEC2356-699A-4B45-BB3E-506D5E0040C0}"
 	ProjectSection(SolutionItems) = preProject
 		.travis.yml = .travis.yml
+		DOCKERFILE = DOCKERFILE
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValiDoc.Unit.Tests", "test\ValiDoc.Unit.Tests\ValiDoc.Unit.Tests.csproj", "{9E582C97-46EA-42D0-AF01-235379DCE0F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValiDoc.CommonTest", "test\ValiDoc.CommonTest\ValiDoc.CommonTest.csproj", "{DB0EA988-2A86-4BB1-882B-5DE5A22B4C9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValiDoc.CommonTest", "test\ValiDoc.CommonTest\ValiDoc.CommonTest.csproj", "{DB0EA988-2A86-4BB1-882B-5DE5A22B4C9F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

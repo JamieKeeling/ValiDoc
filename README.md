@@ -30,18 +30,18 @@ using ValiDoc;
 4. Constructor Inject the RuleDescriptor
 
 ```csharp
-private readonly IRuleDescriptor _ruleDescriptor;
+private readonly IRuleBuilder _ruleBuilder;
 
-public ValuesController(IRuleDescriptor ruleDescriptor)
+public ValidationController(IRuleBuilder ruleBuilder)
 {
-    _ruleDescriptor = ruleDescriptor;
+    _ruleBuilder = ruleBuilder;
 }
 ```
 
 4. Create an instance of DocBuilder that will be used to build the documentation
 
 ```csharp
-var docBuilder = new DocBuilder(_ruleDescriptor);
+var docBuilder = new DocBuilder(_ruleBuilder);
 ```
 
 5. Invoke the .Document() method on the DocBuilder, passing in an implementation of AbstractValidator\<T> 
@@ -75,19 +75,19 @@ public class MultipleRuleSingleChildValidator : AbstractValidator<Person>
 [Route("api/[controller]")]
 public class ValidationController : Controller
 {
-    private readonly IRuleDescriptor _ruleDescriptor;
+    private readonly IRuleBuilder _ruleBuilder;
 
-    public ValidationController(IRuleDescriptor ruleDescriptor)
+    public ValidationController(IRuleBuilder ruleBuilder)
     {
-        _ruleDescriptor = ruleDescriptor;
+        _ruleBuilder = ruleBuilder;
     }
 
     [HttpGet]
-    public IEnumerable<RuleDescription> ValidatorDocumentation()
+    public IEnumerable<RuleDescriptor> ValidatorDocumentation()
     {
         var validator = new MultipleRuleSingleChildValidator();
 
-        var docBuilder = new ValiDoc.DocBuilder(_ruleDescriptor);
+        var docBuilder = new ValiDoc.DocBuilder(_ruleBuilder);
 
         return docBuilder.Document(validator);
     }
@@ -97,12 +97,49 @@ public class ValidationController : Controller
 
 ##### Output
 
-| MemberName        | ValidatorName           | FailureSeverity  | OnFailure | ValidationMessage
-| :-------------: |:-------------:| :-----:|:---------:|:---------:| 
-| First Name      | NotEmptyValidator | Error | Continue | 'First Name' should not be empty.
-| Last Name      | NotEmptyValidator      |   Error | Continue | 'Last Name' should not be empty.
-| Last Name | MaximumLengthValidator      |    Error | Continue | 'Last Name' must be less than {MaxLength} characters. You entered {TotalLength} characters.
-| Address | AddressValidator | Error | Continue | N/A - Refer to specific AddressValidator documentation
+```json
+[
+    {
+        "memberName": "First Name",
+        "rules": [
+            {
+                "validatorName": "NotEmptyValidator",
+                "failureSeverity": "Error",
+                "onFailure": "Continue",
+                "validationMessage": "'First Name' should not be empty."
+            }
+        ]
+    },
+    {
+        "memberName": "Last Name",
+        "rules": [
+            {
+                "validatorName": "NotEmptyValidator",
+                "failureSeverity": "Error",
+                "onFailure": "Continue",
+                "validationMessage": "'Last Name' should not be empty."
+            },
+            {
+                "validatorName": "MaximumLengthValidator",
+                "failureSeverity": "Error",
+                "onFailure": "Continue",
+                "validationMessage": "'Last Name' must be less than {MaxLength} characters. You entered {TotalLength} characters."
+            }
+        ]
+    },
+    {
+        "memberName": "Address",
+        "rules": [
+            {
+                "validatorName": "AddressValidator",
+                "failureSeverity": "Error",
+                "onFailure": "Continue",
+                "validationMessage": "N/A - Refer to specific AddressValidator documentation"
+            }
+        ]
+    }
+]
+```
 
 ## 
 #### Supported Scenarios

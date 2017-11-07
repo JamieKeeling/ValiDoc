@@ -20,39 +20,51 @@ namespace ValiDoc.Integration.Tests.Scenarios
 
             var validationRules = ruleGenerator.Document(validator).ToList();
 
-            var expectedOutput = new List<RuleDescription>
+            var expectedOutput = new List<RuleDescriptor>
             {
-                new RuleDescription
+                new RuleDescriptor
                 {
-                    FailureSeverity = "Error",
                     MemberName = "First Name",
-                    OnFailure = "StopOnFirstFailure",
-                    ValidatorName = "NotEmptyValidator",
-	                ValidationMessage = "'First Name' should not be empty."
-				},
-                new RuleDescription
+                    Rules = new List<RuleDescription>
+                    {
+                        new RuleDescription
+                        {
+                            FailureSeverity = "Error",
+                            OnFailure = "StopOnFirstFailure",
+                            ValidatorName = "NotEmptyValidator",
+                            ValidationMessage = "'First Name' should not be empty."
+                        }
+                    }
+                },
+                new RuleDescriptor
                 {
-                    FailureSeverity = "Error",
                     MemberName = "Last Name",
-                    OnFailure = "StopOnFirstFailure",
-                    ValidatorName = "NotEmptyValidator",
-	                ValidationMessage = "'Last Name' should not be empty."
-				},
-                new RuleDescription
-                {
-                    FailureSeverity = "Error",
-                    MemberName = "Last Name",
-                    OnFailure = "StopOnFirstFailure",
-                    ValidatorName = "MaximumLengthValidator",
-	                ValidationMessage = "'Last Name' must be less than {MaxLength} characters. You entered {TotalLength} characters."
-				}
+                    Rules = new List<RuleDescription>
+                    {
+                        new RuleDescription
+                        {
+                            FailureSeverity = "Error",
+                            OnFailure = "StopOnFirstFailure",
+                            ValidatorName = "NotEmptyValidator",
+                            ValidationMessage = "'Last Name' should not be empty."
+                        },
+                        new RuleDescription
+                        {
+                            FailureSeverity = "Error",
+                            OnFailure = "StopOnFirstFailure",
+                            ValidatorName = "MaximumLengthValidator",
+                            ValidationMessage = "'Last Name' must be less than {MaxLength} characters. You entered {TotalLength} characters."
+                        }
+                    }
+                }
             };
 
+            validationRules.Should().HaveCount(2);
             validationRules.ShouldBeEquivalentTo(expectedOutput, options => options.WithStrictOrdering());
         }
 
         [Fact]
-        public void ValiDoc_WithGlobalCascadeValidatorAndRuleOverride_OutputMultipleRulesWithPOverriddenCascade()
+        public void ValiDoc_WithGlobalCascadeValidatorAndRuleOverride_OutputMultipleRulesWithOverriddenCascade()
         {
             var validator = new MultipleRuleValidatorWithMixedCascade();
 
@@ -60,35 +72,46 @@ namespace ValiDoc.Integration.Tests.Scenarios
 
 	        var validationRules = ruleGenerator.Document(validator).ToList();
 
-			var expectedOutput = new List<RuleDescription>
+            var expectedOutput = new List<RuleDescriptor>
             {
-                new RuleDescription
+                new RuleDescriptor
                 {
-                    FailureSeverity = "Error",
                     MemberName = "First Name",
-                    OnFailure = "Continue",
-                    ValidatorName = "NotEmptyValidator",
-					ValidationMessage = "'First Name' should not be empty."
+                    Rules = new List<RuleDescription>
+                    {
+                        new RuleDescription
+                        {
+                            FailureSeverity = "Error",
+                            OnFailure = "Continue",
+                            ValidatorName = "NotEmptyValidator",
+                            ValidationMessage = "'First Name' should not be empty."
+                        }
+                    }
                 },
-                new RuleDescription
+                new RuleDescriptor
                 {
-                    FailureSeverity = "Error",
                     MemberName = "Last Name",
-                    OnFailure = "StopOnFirstFailure",
-                    ValidatorName = "NotEmptyValidator",
-					ValidationMessage = "'Last Name' should not be empty."
-                },
-                new RuleDescription
-                {
-                    FailureSeverity = "Error",
-                    MemberName = "Last Name",
-                    OnFailure = "StopOnFirstFailure",
-                    ValidatorName = "MaximumLengthValidator",
-					ValidationMessage = "'Last Name' must be less than {MaxLength} characters. You entered {TotalLength} characters."
-
+                    Rules = new List<RuleDescription>
+                    {
+                        new RuleDescription
+                        {
+                            FailureSeverity = "Error",
+                            OnFailure = "StopOnFirstFailure",
+                            ValidatorName = "NotEmptyValidator",
+                            ValidationMessage = "'Last Name' should not be empty."
+                        },
+                        new RuleDescription
+                        {
+                            FailureSeverity = "Error",
+                            OnFailure = "StopOnFirstFailure",
+                            ValidatorName = "MaximumLengthValidator",
+                            ValidationMessage = "'Last Name' must be less than {MaxLength} characters. You entered {TotalLength} characters."
+                        }
+                    }
                 }
             };
 
+            validationRules.Should().HaveCount(2);
             validationRules.ShouldBeEquivalentTo(expectedOutput, options => options.WithStrictOrdering());
         }
     }
